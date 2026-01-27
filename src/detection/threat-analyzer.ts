@@ -1,6 +1,12 @@
 /**
  * Main Threat Analyzer
  * Orchestrates all detection layers and produces final verdict
+ * 
+ * Priority Logic:
+ * 1. External APIs (VirusTotal, Google Safe Browsing, PhishTank) are the source of truth
+ * 2. If ANY external API flags a URL as malicious, it's considered malicious
+ * 3. All detection layers still run for transparency and complete scoring
+ * 4. Internal detection methods (heuristics, ML) are used when external APIs are clean
  */
 
 import { ThreatAnalysisResult, DetectionLayer, CacheEntry } from '../types/types';
@@ -54,20 +60,16 @@ export class ThreatAnalyzer {
       const signatureLayers = await SignatureEngine.checkAllAPIs(normalizedUrl);
       allLayers.push(...signatureLayers);
 
-      // If signature found malicious, return immediately (high confidence)
-      if (signatureLayers.length > 0 && signatureLayers.some(l => l.matched)) {
-        const result = this.buildResult(normalizedUrl, allLayers);
-        this.cacheResult(normalizedUrl, result);
-        return result;
-      }
-
-      // Layer 2: Heuristic analysis
+      // Layer 2: Heuristic analysis (always run for complete analysis)
       const heuristicLayers = HeuristicEngine.analyze(normalizedUrl);
       allLayers.push(...heuristicLayers);
 
-      // Layer 3: ML-based detection
+      // Layer 3: ML-based detection (always run for complete analysis)
       const mlLayer = MLEngine.analyze(normalizedUrl);
       allLayers.push(mlLayer);
+      
+      // Note: We no longer return early on signature matches to allow
+      // all detection methods to contribute scores for transparency
 
       // Build final result
       const result = this.buildResult(normalizedUrl, allLayers);
@@ -100,40 +102,64 @@ export class ThreatAnalyzer {
    * Build final threat analysis result
    */
   private static buildResult(url: string, layers: DetectionLayer[]): ThreatAnalysisResult {
-    // Calculate weighted score
+    // Separate external API results from other detection methods
+    const externalAPILayers = layers.filter(l => 
+      l.layer === 'signature' && 
+      (l.method.includes('VirusTotal') || 
+       l.method.includes('Google Safe Browsing') || 
+       l.method.includes('PhishTank'))
+    );
+    
+    const otherLayers = layers.filter(l => !externalAPILayers.includes(l));
+    
+    // Check if any external API flagged it as malicious
+    const externalAPIDetected = externalAPILayers.some(l => l.matched);
+    
     let totalScore = 0;
-    let signatureMatched = false;
-
-    for (const layer of layers) {
-      if (layer.layer === 'signature' && layer.matched) {
-        // Signature matches are definitive - always block
-        signatureMatched = true;
-        totalScore = 100;
-        break;
+    let isMalicious = false;
+    let riskLevel: 'safe' | 'low' | 'medium' | 'high' | 'critical' = 'safe';
+    let details = '';
+    
+    if (externalAPIDetected) {
+      // External APIs are the source of truth - treat as malicious
+      totalScore = 100;
+      isMalicious = true;
+      riskLevel = 'critical';
+      
+      const matchedAPIs = externalAPILayers.filter(l => l.matched);
+      details = `Flagged by external threat intelligence: ${matchedAPIs.map(l => l.method).join(', ')}`;
+      
+      // Add additional context from other detection methods
+      const otherMatched = otherLayers.filter(l => l.matched);
+      if (otherMatched.length > 0) {
+        details += ` | Also detected by: ${otherMatched.map(l => l.method).join(', ')}`;
+      }
+    } else {
+      // No external API detection - use traditional scoring
+      for (const layer of layers) {
+        if (layer.matched) {
+          totalScore += layer.score;
+        }
       }
       
-      if (layer.matched) {
-        totalScore += layer.score;
+      // Cap at 100
+      totalScore = Math.min(100, totalScore);
+      
+      // Determine risk level using traditional thresholds
+      riskLevel = this.getRiskLevel(totalScore);
+      isMalicious = riskLevel === 'high' || riskLevel === 'critical';
+      
+      // Generate details
+      const matchedLayers = layers.filter(l => l.matched);
+      details = matchedLayers.length > 0
+        ? `Detected by: ${matchedLayers.map(l => l.method).join(', ')}`
+        : 'No threats detected';
+      
+      // Add note that external APIs didn't flag it
+      if (externalAPILayers.length > 0) {
+        details += ' | External threat intelligence: Clean';
       }
     }
-
-    // Cap at 100
-    totalScore = Math.min(100, totalScore);
-    
-    // If signature matched, ensure it's always treated as malicious
-    if (signatureMatched) {
-      totalScore = 100;
-    }
-
-    // Determine risk level
-    const riskLevel = this.getRiskLevel(totalScore);
-    const isMalicious = riskLevel === 'high' || riskLevel === 'critical';
-
-    // Generate details
-    const matchedLayers = layers.filter(l => l.matched);
-    const details = matchedLayers.length > 0
-      ? `Detected by: ${matchedLayers.map(l => l.method).join(', ')}`
-      : 'No threats detected';
 
     return {
       url,

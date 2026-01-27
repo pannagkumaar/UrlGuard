@@ -264,19 +264,48 @@ export class SignatureEngine {
     const layers: DetectionLayer[] = [];
 
     results.forEach((result, index) => {
+      const apiNames = ['Google Safe Browsing', 'PhishTank', 'VirusTotal'];
+      const apiName = apiNames[index];
+      
       if (result.status === 'fulfilled' && result.value.success) {
         const response = result.value;
         if (response.malicious) {
           layers.push({
             layer: 'signature',
             method: response.source,
-            score: 100, // Signature-based detections are high confidence
+            score: 100, // External API detections are high confidence
             details: `Flagged as malicious by ${response.source}${response.details?.totalDetections ? ` (${response.details.totalDetections} detections)` : ''}`,
             matched: true
           });
+        } else {
+          // Add clean result for transparency
+          layers.push({
+            layer: 'signature',
+            method: response.source,
+            score: 0,
+            details: `Checked by ${response.source} - Clean`,
+            matched: false
+          });
         }
+      } else if (result.status === 'fulfilled' && !result.value.success) {
+        // Add failed check for transparency
+        const response = result.value;
+        layers.push({
+          layer: 'signature',
+          method: apiName,
+          score: 0,
+          details: `${apiName} check failed: ${response.error || 'Unknown error'}`,
+          matched: false
+        });
       } else if (result.status === 'rejected') {
-        // Only log if it's a real error (not just API unavailable)
+        // Add error result for transparency
+        layers.push({
+          layer: 'signature',
+          method: apiName,
+          score: 0,
+          details: `${apiName} unavailable: ${result.reason}`,
+          matched: false
+        });
         console.debug(`[LinkShield] API check skipped:`, result.reason);
       }
     });

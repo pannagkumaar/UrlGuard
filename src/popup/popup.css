@@ -230,6 +230,88 @@ h2 {
   color: #e0f2fe;
 }
 
+/* Detection breakdown */
+.detection-breakdown {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+  border-radius: 8px;
+}
+
+.detection-breakdown h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.details-summary {
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.layers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.layer-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.layer-method {
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.layer-score {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.layer-score-value {
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+.layer-score-value.matched {
+  background: rgba(255, 0, 85, 0.2);
+  color: #ff0055;
+}
+
+.layer-score-value.clean {
+  background: rgba(0, 255, 136, 0.2);
+  color: #00ff88;
+}
+
+.layer-score-value.error {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.layer-details {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 0.25rem;
+  padding-left: 0.75rem;
+}
+
 /* Stats */
 .stats-grid {
   display: grid;
@@ -281,9 +363,9 @@ h2 {
 }
 
 .shield-icon {
-  width: 40px;
-  height: 40px;
-  margin-right: 12px;
+  width: 48px; /* Increase width */
+  height: 48px; /* Increase height */
+  margin-right: 8px; /* Adjust margin */
   color: #00ff88;
   filter: drop-shadow(0 0 8px rgba(0, 255, 136, 0.4));
 }

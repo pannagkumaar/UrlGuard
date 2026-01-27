@@ -460,16 +460,36 @@ export class HeuristicEngine {
    */
   private static detectBrandImpersonation(hostname: string): string | null {
     const hostLower = hostname.toLowerCase();
+    
+    // Whitelist of legitimate domains that might contain brand names
+    const legitimateDomains = [
+      'github.com', 'stackoverflow.com', 'reddit.com', 'wikipedia.org',
+      'medium.com', 'youtube.com', 'twitter.com', 'linkedin.com'
+    ];
+    
+    // Don't flag well-known legitimate sites
+    if (legitimateDomains.some(domain => hostLower.endsWith(domain) || hostLower === domain)) {
+      return null;
+    }
 
     for (const brand of CONFIG.TARGETED_BRANDS) {
-      // Check for brand name in domain but not official
-      if (hostLower.includes(brand) && !hostLower.endsWith(`${brand}.com`)) {
+      // Only check the actual domain name, not subdomains or path
+      const domainParts = hostLower.split('.');
+      const sld = domainParts.length >= 2 ? domainParts[domainParts.length - 2] : hostLower;
+      
+      // Check for brand name in second-level domain (not official domain)
+      if (sld === brand && !hostLower.endsWith(`${brand}.com`)) {
+        return brand;
+      }
+      
+      // Check for brand as subdomain (e.g., google.evil.com)
+      if (domainParts.length > 2 && domainParts[0] === brand && !hostLower.includes(`${brand}.com`)) {
         return brand;
       }
 
-      // Check for typosquatting (e.g., "paypa1" instead of "paypal")
-      const distance = HeuristicEngine.levenshteinDistance(hostLower, `${brand}.com`);
-      if (distance > 0 && distance <= 2 && hostLower.includes(brand.substring(0, 4))) {
+      // Check for typosquatting only on the main domain
+      const distance = HeuristicEngine.levenshteinDistance(sld, brand);
+      if (distance > 0 && distance <= 2 && sld.length >= brand.length - 1) {
         return brand;
       }
 

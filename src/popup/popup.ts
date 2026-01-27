@@ -39,11 +39,116 @@ async function loadCurrentPageStatus() {
       riskLevel.textContent = analysis.riskLevel.toUpperCase();
       riskLevel.className = `risk-level ${analysis.riskLevel}`;
       riskScore.textContent = `${analysis.riskScore}/100`;
+
+      // Show detailed breakdown if available
+      displayDetectionBreakdown(analysis);
+    } else {
+      // Hide breakdown if no analysis available
+      const breakdown = document.getElementById('detectionBreakdown')!;
+      breakdown.style.display = 'none';
     }
   } catch (error) {
     console.error('Error loading current page status:', error);
     document.getElementById('currentDomain')!.textContent = 'Error loading page info';
   }
+}
+
+/**
+ * Display detailed detection breakdown
+ */
+function displayDetectionBreakdown(analysis: any) {
+  const breakdown = document.getElementById('detectionBreakdown')!;
+  const summary = document.getElementById('detailsSummary')!;
+  const layersList = document.getElementById('layersList')!;
+
+  // Show the breakdown section
+  breakdown.style.display = 'block';
+
+  // Display summary
+  summary.textContent = analysis.details || 'No additional details available';
+
+  // Clear existing layers
+  layersList.innerHTML = '';
+
+  // Group layers by type for better organization
+  const signatureLayers = analysis.detectionLayers.filter((l: any) => l.layer === 'signature');
+  const heuristicLayers = analysis.detectionLayers.filter((l: any) => l.layer === 'heuristic');
+  const mlLayers = analysis.detectionLayers.filter((l: any) => l.layer === 'ml');
+  const behaviorLayers = analysis.detectionLayers.filter((l: any) => l.layer === 'behavior');
+
+  // Display signature layers (external APIs) first as they have priority
+  if (signatureLayers.length > 0) {
+    const sectionTitle = document.createElement('div');
+    sectionTitle.style.fontWeight = '600';
+    sectionTitle.style.color = 'var(--accent-color)';
+    sectionTitle.style.fontSize = '0.8rem';
+    sectionTitle.style.marginBottom = '0.5rem';
+    sectionTitle.textContent = 'External Threat Intelligence';
+    layersList.appendChild(sectionTitle);
+
+    signatureLayers.forEach((layer: any) => {
+      layersList.appendChild(createLayerItem(layer));
+    });
+  }
+
+  // Display other layers
+  const otherLayers = [...heuristicLayers, ...mlLayers, ...behaviorLayers];
+  if (otherLayers.length > 0) {
+    const sectionTitle = document.createElement('div');
+    sectionTitle.style.fontWeight = '600';
+    sectionTitle.style.color = 'var(--accent-color)';
+    sectionTitle.style.fontSize = '0.8rem';
+    sectionTitle.style.margin = '1rem 0 0.5rem 0';
+    sectionTitle.textContent = 'Internal Detection Methods';
+    layersList.appendChild(sectionTitle);
+
+    otherLayers.forEach((layer: any) => {
+      layersList.appendChild(createLayerItem(layer));
+    });
+  }
+}
+
+/**
+ * Create a layer item element
+ */
+function createLayerItem(layer: any): HTMLElement {
+  const item = document.createElement('div');
+  item.className = 'layer-item';
+
+  const method = document.createElement('div');
+  method.className = 'layer-method';
+  method.textContent = layer.method;
+
+  const score = document.createElement('div');
+  score.className = 'layer-score';
+
+  const scoreValue = document.createElement('div');
+  scoreValue.className = 'layer-score-value';
+  
+  if (layer.matched) {
+    scoreValue.classList.add('matched');
+    scoreValue.textContent = `${layer.score}`;
+  } else if (layer.details && layer.details.includes('failed') || layer.details.includes('unavailable')) {
+    scoreValue.classList.add('error');
+    scoreValue.textContent = 'N/A';
+  } else {
+    scoreValue.classList.add('clean');
+    scoreValue.textContent = 'Clean';
+  }
+
+  score.appendChild(scoreValue);
+  item.appendChild(method);
+  item.appendChild(score);
+
+  // Add details if available
+  if (layer.details) {
+    const details = document.createElement('div');
+    details.className = 'layer-details';
+    details.textContent = layer.details;
+    item.appendChild(details);
+  }
+
+  return item;
 }
 
 /**
