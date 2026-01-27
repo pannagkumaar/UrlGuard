@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkShield Dashboard</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="bg-orb orb-primary"></div>
+  <div class="bg-orb orb-secondary"></div>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <svg class="shield-icon" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L4 7v6c0 8 8 12 8 12s8-4 8-12V7l-8-5z" stroke="#00ff88" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <path d="M10 13l2 2 4-4" stroke="#00ff88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="title-wrap">
+          <p class="eyebrow">Realtime protection</p>
+          <h1>LinkShield</h1>
+        </div>
+      </div>
+      <div class="status" id="status">
+        <span class="status-indicator active"></span>
+        <span>Protected</span>
+      </div>
+    </div>
+
+    <!-- Current Page Status -->
+    <div class="current-page">
+      <h2>Current Page</h2>
+      <div class="page-info">
+        <div class="domain" id="currentDomain">Loading...</div>
+        <div class="risk-indicator" id="riskIndicator">
+          <div class="risk-level safe" id="riskLevel">SAFE</div>
+          <div class="risk-score" id="riskScore">0/100</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics -->
+    <div class="stats-section">
+      <h2>Statistics</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <svg class="stat-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#00ff88" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <div class="stat-value" id="totalChecked">0</div>
+          <div class="stat-label">Sites Checked</div>
+        </div>
+        <div class="stat-card blocked">
+          <svg class="stat-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#ff0055" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <div class="stat-value" id="totalBlocked">0</div>
+          <div class="stat-label">Threats Blocked</div>
+        </div>
+      </div>
+
+      <!-- Detection Methods -->
+      <div class="detection-stats">
+        <h3>Blocked By Detection Layer</h3>
+        <div class="detection-bar">
+          <div class="bar-item">
+            <span class="bar-label">Signature</span>
+            <div class="bar-track">
+              <div class="bar-fill signature" id="barSignature" style="width: 0%"></div>
+            </div>
+            <span class="bar-count" id="countSignature">0</span>
+          </div>
+          <div class="bar-item">
+            <span class="bar-label">Heuristic</span>
+            <div class="bar-track">
+              <div class="bar-fill heuristic" id="barHeuristic" style="width: 0%"></div>
+            </div>
+            <span class="bar-count" id="countHeuristic">0</span>
+          </div>
+          <div class="bar-item">
+            <span class="bar-label">ML Model</span>
+            <div class="bar-track">
+              <div class="bar-fill ml" id="barML" style="width: 0%"></div>
+            </div>
+            <span class="bar-count" id="countML">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Blocks -->
+    <div class="recent-section">
+      <h2>Recent Blocks</h2>
+      <div class="recent-list" id="recentList">
+        <p class="no-data">No threats blocked yet</p>
+      </div>
+    </div>
+
+    <!-- API Key Management -->
+    <div class="apikey-section">
+      <h2>API Keys</h2>
+      <div class="apikey-controls">
+        <input type="text" id="apiKeySafeBrowsing" placeholder="Google Safe Browsing API Key" class="apikey-input">
+        <input type="text" id="apiKeyVirusTotal" placeholder="VirusTotal API Key" class="apikey-input">
+        <input type="text" id="apiKeyPhishTank" placeholder="PhishTank API Key" class="apikey-input">
+        <button id="saveApiKeysBtn" class="btn btn-add">Save API Keys</button>
+      </div>
+      <p class="apikey-note">Keys are stored locally in your browser and never sent anywhere else.</p>
+    </div>
+
+    <!-- Whitelist -->
+    <div class="whitelist-section">
+      <h2>Whitelist Management</h2>
+      <div class="whitelist-controls">
+        <input 
+          type="text" 
+          id="whitelistInput" 
+          placeholder="Enter domain (e.g., example.com)"
+          class="whitelist-input"
+        >
+        <button id="addWhitelistBtn" class="btn btn-add">Add</button>
+      </div>
+      <div class="whitelist-list" id="whitelistList">
+        <p class="no-data">No whitelisted domains</p>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button id="resetStatsBtn" class="btn btn-secondary">Reset Statistics</button>
+      <button id="clearCacheBtn" class="btn btn-secondary">Clear Cache</button>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Real-Time Malicious URL Detection</p>
+      <p class="version">v1.0.0</p>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

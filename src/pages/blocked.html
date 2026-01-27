@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Site Blocked - LinkShield</title>
+  <link rel="stylesheet" href="blocked.css">
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+  <div class="container">
+    <svg class="shield-icon" viewBox="0 0 24 24" width="60" height="60" fill="none" stroke="#00ff88" stroke-width="2">
+      <path d="M12 2L4 7v6c0 8 8 12 8 12s8-4 8-12V7l-8-5z" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M10 13l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    
+    <p class="eyebrow">Realtime defense</p>
+    <h1><svg class="warning-icon" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="#ff0055" stroke-width="2.5" style="display: inline; margin-right: 8px; vertical-align: middle;">
+      <path d="M12 2L2 20h20L12 2z" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 9v4M12 17v.01" stroke-linecap="round"/>
+    </svg> Dangerous Website Blocked</h1>
+    
+    <div class="alert-box" id="alertBox">
+      <div class="risk-badge" id="riskBadge">HIGH RISK</div>
+      <p class="message" id="message">
+        This website has been blocked to protect you from potential threats.
+      </p>
+    </div>
+
+    <div class="details-section">
+      <h2>Threat Details</h2>
+      <div class="detail-item">
+        <strong>URL:</strong>
+        <div class="url-display" id="urlDisplay">Loading...</div>
+      </div>
+      <div class="detail-item">
+        <strong>Risk Score:</strong>
+        <span id="riskScore">--</span>/100
+      </div>
+      <div class="detail-item">
+        <strong>Detection Method:</strong>
+        <span id="detectionMethod">--</span>
+      </div>
+      <div class="detail-item">
+        <strong>Reason:</strong>
+        <div id="reason">Analyzing...</div>
+      </div>
+    </div>
+
+    <div class="detection-layers" id="detectionLayers">
+      <h3>Detection Layers</h3>
+      <div id="layersList"></div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-safe" id="goBackBtn">
+        ← Go Back to Safety
+      </button>
+      <button class="btn btn-whitelist" id="whitelistBtn">
+        Add to Whitelist
+      </button>
+      <button class="btn btn-danger" id="proceedBtn">
+        Proceed Anyway (Not Recommended)
+      </button>
+    </div>
+
+    <div class="info-box">
+      <h3><svg class="info-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#00ff88" stroke-width="2" style="display: inline; margin-right: 6px; vertical-align: middle;">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 16v-4M12 8h.01" stroke-linecap="round"/>
+      </svg> What to do?</h3>
+      <ul>
+        <li><strong>Go Back:</strong> Return to the previous safe page</li>
+        <li><strong>Whitelist:</strong> If you trust this site, add it to your whitelist</li>
+        <li><strong>Proceed:</strong> Continue at your own risk (not recommended)</li>
+      </ul>
+    </div>
+
+    <div class="footer">
+      <p>Protected by <strong>LinkShield</strong> - Real-Time Malicious URL Detection</p>
+      <p class="timestamp" id="timestamp"></p>
+    </div>
+  </div>
+
+  <script src="blocked.js"></script>
+</body>
+</html>
