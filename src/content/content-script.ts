@@ -117,6 +117,18 @@ function detectBrandImpersonation(): void {
   const pageTitle = document.title.toLowerCase();
   const hostname = window.location.hostname.toLowerCase();
 
+  // Trusted domains that legitimately reference other brands
+  const trustedDomains = [
+    'github.com', 'stackoverflow.com', 'reddit.com', 'wikipedia.org',
+    'medium.com', 'youtube.com', 'twitter.com', 'linkedin.com',
+    'news.google.com', 'techcrunch.com', 'verge.com', 'arstechnica.com'
+  ];
+
+  // Skip detection on trusted domains to prevent false positives
+  if (trustedDomains.some(domain => hostname.endsWith(domain))) {
+    return;
+  }
+
   const brands = [
     'paypal', 'google', 'microsoft', 'apple', 'amazon', 'facebook',
     'netflix', 'instagram', 'bank', 'chase', 'wellsfargo'
@@ -124,11 +136,18 @@ function detectBrandImpersonation(): void {
 
   for (const brand of brands) {
     // Check if page mentions brand prominently but domain doesn't match
-    // Only warn if brand appears multiple times or in title (reduces false positives)
+    // Require both high frequency AND suspicious context to reduce false positives
     const textCount = (pageText.match(new RegExp(brand, 'gi')) || []).length;
     const inTitle = pageTitle.includes(brand);
+    const hasLoginForm = document.querySelector('input[type="password"]') !== null;
+    const hasPaymentForm = document.querySelector('input[name*="card"], input[name*="payment"]') !== null;
     
-    if ((textCount > 3 || inTitle) && !hostname.includes(brand)) {
+    // Only flag if there's strong evidence of impersonation attempt
+    const strongEvidence = (textCount > 5 || (inTitle && textCount > 2)) && 
+                          (hasLoginForm || hasPaymentForm) && 
+                          !hostname.includes(brand);
+    
+    if (strongEvidence) {
       console.warn(`[LinkShield] Potential ${brand} impersonation detected`);
       
       // Add warning banner

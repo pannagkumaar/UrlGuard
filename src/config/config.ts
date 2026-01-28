@@ -88,6 +88,14 @@ export const CONFIG = {
     'outlook.com',
     'live.com',
     'windows.net',
+    // Development platforms
+    'github.com',
+    'github.io',
+    'gitlab.com',
+    'bitbucket.org',
+    'sourceforge.net',
+    'npmjs.com',
+    'stackoverflow.com',
     // Other major services
     'apple.com',
     'icloud.com',

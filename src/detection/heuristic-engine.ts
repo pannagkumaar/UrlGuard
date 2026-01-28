@@ -463,12 +463,19 @@ export class HeuristicEngine {
     
     // Whitelist of legitimate domains that might contain brand names
     const legitimateDomains = [
-      'github.com', 'stackoverflow.com', 'reddit.com', 'wikipedia.org',
-      'medium.com', 'youtube.com', 'twitter.com', 'linkedin.com'
+      'github.com', 'github.io', 'stackoverflow.com', 'reddit.com', 'wikipedia.org',
+      'medium.com', 'youtube.com', 'twitter.com', 'linkedin.com', 'npmjs.com',
+      'docker.io', 'hub.docker.com', 'gitlab.com', 'bitbucket.org', 'sourceforge.net'
     ];
     
-    // Don't flag well-known legitimate sites
-    if (legitimateDomains.some(domain => hostLower.endsWith(domain) || hostLower === domain)) {
+    // Don't flag well-known legitimate sites - check both exact match and subdomain
+    const isLegitimate = legitimateDomains.some(domain => {
+      return hostLower === domain || 
+             hostLower.endsWith('.' + domain) ||
+             (hostLower.includes(domain) && hostLower.split('.').includes(domain.split('.')[0]));
+    });
+    
+    if (isLegitimate) {
       return null;
     }
 
