@@ -2,10 +2,6 @@
 
 **Real-Time Phishing and Malware Protection Powered by Multi-Layer Threat Detection**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
-[![Manifest V3](https://img.shields.io/badge/Manifest-V3-green)](https://developer.chrome.com/docs/extensions/mv3/intro/)
-
 ##  Overview
 
 URLGuard is a comprehensive browser extension that protects users from malicious websites, phishing attacks, and scam links in real-time. It employs a sophisticated **4-layer detection engine** combining signature-based detection, heuristic analysis, machine learning, and behavioral monitoring.
