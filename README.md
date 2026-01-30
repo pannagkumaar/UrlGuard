@@ -1,4 +1,4 @@
-# 🛡️ LinkShield - Malicious URL Detection Browser Extension
+#  URLGuard - Malicious URL Detection Browser Extension
 
 **Real-Time Phishing and Malware Protection Powered by Multi-Layer Threat Detection**
 
@@ -6,9 +6,9 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-green)](https://developer.chrome.com/docs/extensions/mv3/intro/)
 
-## 🌟 Overview
+##  Overview
 
-LinkShield is a comprehensive browser extension that protects users from malicious websites, phishing attacks, and scam links in real-time. It employs a sophisticated **4-layer detection engine** combining signature-based detection, heuristic analysis, machine learning, and behavioral monitoring.
+URLGuard is a comprehensive browser extension that protects users from malicious websites, phishing attacks, and scam links in real-time. It employs a sophisticated **4-layer detection engine** combining signature-based detection, heuristic analysis, machine learning, and behavioral monitoring.
 
 ### Key Features
 
@@ -21,18 +21,18 @@ LinkShield is a comprehensive browser extension that protects users from malicio
 ✅ **Interactive Dashboard** - Real-time statistics and threat monitoring  
 ✅ **Whitelist Management** - User-controlled trusted domains  
 
-## 🏗️ Architecture
+##  Architecture
 
 ```
-LinkShield Browser Extension
+URLGuard Browser Extension
 │
-├── 📦 Background Service Worker (Manifest V3)
+├──  Background Service Worker (Manifest V3)
 │   ├── URL Interceptor (webRequest API)
 │   ├── Threat Analyzer Orchestrator
 │   ├── Statistics Tracker
 │   └── Cache Manager
 │
-├── 🔍 Multi-Layer Detection Engine
+├──  Multi-Layer Detection Engine
 │   ├── Layer 1: Signature-Based Detection
 │   │   ├── Google Safe Browsing API
 │   │   ├── PhishTank Database
@@ -62,18 +62,18 @@ LinkShield Browser Extension
 │       ├── Suspicious JavaScript Detection
 │       └── Brand Impersonation Warnings
 │
-├── 💻 User Interface
+├──  User Interface
 │   ├── Popup Dashboard (Statistics & Controls)
 │   ├── Blocked Page (Warning & Details)
 │   └── Content Warnings (In-Page Alerts)
 │
-└── 💾 Storage & Caching
+└──  Storage & Caching
     ├── Threat Analysis Cache
     ├── Statistics Storage
     └── Whitelist Management
 ```
 
-## 🚀 Installation & Setup
+##  Installation & Setup
 
 ### Prerequisites
 
@@ -310,22 +310,10 @@ npm test         # Run tests (when configured)
 3. Update types in `types.ts`
 4. Add configuration to `config.ts`
 
-## 🎓 Resume Impact
 
-This project demonstrates:
 
-✅ **Browser Security Internals** - Manifest V3, webRequest API, service workers  
-✅ **Threat Detection Systems** - Multi-layer defense architecture  
-✅ **API Integration** - RESTful APIs, rate limiting, caching  
-✅ **Machine Learning** - Feature engineering, prediction models  
-✅ **TypeScript/JavaScript** - Modern web development  
-✅ **System Design** - Scalable architecture, performance optimization  
-✅ **Security Engineering** - Threat modeling, defense-in-depth  
-✅ **UX Design** - User-friendly security warnings  
+##  Future Enhancements
 
-## 🚧 Future Enhancements
-
-**Phase 6 - Advanced Features:**
 - [ ] Real ML model (ONNX) trained on phishing dataset
 - [ ] Backend API for centralized threat intelligence
 - [ ] Crowd-sourced threat reporting
@@ -336,7 +324,7 @@ This project demonstrates:
 - [ ] Export threat logs
 - [ ] Multi-browser support (Firefox, Safari)
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions welcome! Areas for improvement:
 - Add more threat intelligence sources
@@ -345,24 +333,21 @@ Contributions welcome! Areas for improvement:
 - Add automated testing
 - Performance optimizations
 
-## 📄 License
+##  License
 
 MIT License - See [LICENSE](LICENSE) file
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - Google Safe Browsing API
 - PhishTank Community
 - VirusTotal
 - Open source security community
 
-## 📧 Contact
 
-For questions or collaboration:
-- GitHub Issues: [Create an issue](https://github.com/yourusername/linkshield/issues)
 
 ---
 
 **⚠️ Disclaimer:** This extension is for educational and security research purposes. While it provides multiple layers of protection, no security tool is 100% effective. Always practice safe browsing habits.
 
-**🛡️ Stay safe online with LinkShield!**
+**🛡️ Stay safe online with URLGuard!**
